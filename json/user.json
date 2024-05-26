@@ -1,0 +1,13 @@
+{
+    "username":"",
+    "password":""
+}
+
+// localhost:8800/api/auth/register
+
+{
+    "username":"",
+    "email":"",
+    "password":"",
+    "img":""
+}
