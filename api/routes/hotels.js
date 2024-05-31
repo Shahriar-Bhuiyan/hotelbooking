@@ -7,6 +7,7 @@ import {
   getHotel,
   getHotelRooms,
   getHotels,
+  getList,
   updateHotel,
 } from "../controllers/hotel.js";
 
@@ -24,6 +25,7 @@ router.delete("/:id", verifyAdmin, deleteHotel);
 
 router.get("/find/:id", getHotel);
 //GET ALL
+router.get("/find", getList);
 
 router.get("/", getHotels);
 router.get("/countByCity", countByCity);

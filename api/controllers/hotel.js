@@ -1,5 +1,6 @@
 import Hotel from "../models/Hotel.js";
 import Room from "../models/Room.js";
+import scrapeHotelsByDestination from "./scrapper.js";
 
 export const createHotel = async (req, res, next) => {
   const newHotel = new Hotel(req.body);
@@ -39,6 +40,41 @@ export const getHotel = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getList = async (req, res, next) => {
+  const { min, max, destination, ...others } = req.query;
+  let lowercase = "";
+
+  if (destination) {
+    lowercase = destination.toLowerCase();
+  }
+
+  try {
+    // Scrape data based on the destination
+    const scrapedData = await scrapeHotelsByDestination(lowercase);
+
+   
+    const hotels = await Hotel.find({
+      ...others,
+      cheapestPrice: { $gt: min || 1, $lt: max || 999 },
+    }).limit(req.query.limit);
+
+    // Merge the scraped data with the hotels data
+    const hotelsWithData = hotels.map((hotel) => ({
+      ...hotel.toObject(), 
+    }));
+
+    const mergedData = {
+      main: hotelsWithData,
+      scraped: scrapedData,
+    };
+
+    res.status(200).json(mergedData);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getHotels = async (req, res, next) => {
   const { min, max, ...others } = req.query;
   try {
@@ -92,7 +128,7 @@ export const getHotelRooms = async (req, res, next) => {
         return Room.findById(room);
       })
     );
-    res.status(200).json(list)
+    res.status(200).json(list);
   } catch (err) {
     next(err);
   }
