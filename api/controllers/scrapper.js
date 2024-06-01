@@ -1,5 +1,6 @@
 import axios from "axios";
 import cheerio from "cheerio";
+import { json } from "express";
 import { v4 as uuidv4 } from "uuid";
 
 const links = {
@@ -23,15 +24,16 @@ const scrapeHotelsByDestination = async (destination) => {
 
     const scrapedData = [];
 
-    $('.d4924c9e74 [data-testid="property-card"]').each((index, element) => {
+    $('.d4924c9e74 [data-testid="property-card-container"]').each((index, element) => {
       const childTitle = $(element).find(".fcab3ed991.a23c043802").text();
-      const childImage = $(element).find("img.b8b0793b0e").attr("src") || "";
+      const childImage = $(element).find("img.f9671d49b1").attr("src") || "";
       const location = $(element).find('[data-testid="address"]').text();
       const price = $(element)
         .find('[data-testid="price-and-discounted-price"]')
         .text();
       const cheapestPrice = price.replace(/\$US/g, "").trim();
       const newString = childImage.replace(/\\/g, "");
+      const distance = $(element).find('[data-testid="distance"]').text();
 
       const childData = {
         _id: uuidv4(),
@@ -39,6 +41,7 @@ const scrapeHotelsByDestination = async (destination) => {
         photos: newString,
         location: location,
         cheapestPrice: cheapestPrice,
+        distance:distance
       };
 
       scrapedData.push(childData);
@@ -53,6 +56,3 @@ const scrapeHotelsByDestination = async (destination) => {
 
 export default scrapeHotelsByDestination;
 
-const value = await scrapeHotelsByDestination('dhaka');
-
-console.log('list'+ value)

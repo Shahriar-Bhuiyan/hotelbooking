@@ -7,6 +7,7 @@ import hotelsRoute from "./routes/hotels.js";
 import roomsRoute from "./routes/rooms.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import processPayment from "./routes/payment.js";
 
 const app = express();
 dotenv.config();
@@ -34,6 +35,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
+app.use("/api/checkout", processPayment);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
@@ -48,5 +50,5 @@ app.use((err, req, res, next) => {
 
 app.listen(8800, () => {
   connect();
-  console.log("Connected to backend.");
+  console.log("Connected to backend");
 });
