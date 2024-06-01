@@ -2,6 +2,8 @@ import "./navbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import Logo from '../../assets/logo.png'
+
 const Navbar = () => {
   const { user, dispatch } = useContext(AuthContext);
 
@@ -13,7 +15,10 @@ const Navbar = () => {
     <div className="navbar">
       <div className="navContainer">
         <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-          <span className="logo">ZaferTravel</span>
+         <div style={{display:'flex',alignItems:'center',paddingTop:10,gap:5}}>
+         <img src={Logo} width={100}/>
+          <span className="logo" >Flytourister</span>
+         </div>
         </Link>
         {user ? (
           <div className="navItems">
